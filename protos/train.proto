@@ -33,7 +33,7 @@ message TrainConfig {
   // If from an object detection model, the model being trained should have
   // the same parameters with the exception of the num_classes parameter.
   // If false, it assumes the checkpoint was a object classification model.
-  optional bool from_detection_checkpoint = 8 [default=false];
+  optional uint32 from_detection_checkpoint = 8 [default=0];
 
   // Number of steps to train the DetectionModel for. If 0, will train the model
   // indefinitely.

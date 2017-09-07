@@ -210,7 +210,7 @@ def train(create_tensor_dict_fn, create_model_fn, train_config, master, task,
 
     # Create ops required to initialize the model from a given checkpoint.
     init_fn = None
-    if train_config.fine_tune_checkpoint:
+    if train_config.fine_tune_checkpoint and train_config.from_detection_checkpoint != 3:
       var_map = detection_model.restore_map(
           from_detection_checkpoint=train_config.from_detection_checkpoint)
       available_var_map = (variables_helper.

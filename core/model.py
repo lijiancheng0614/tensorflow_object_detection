@@ -228,7 +228,7 @@ class DetectionModel(object):
           fields.BoxListFields.keypoints] = groundtruth_keypoints_list
 
   @abstractmethod
-  def restore_map(self, from_detection_checkpoint=True):
+  def restore_map(self, from_detection_checkpoint=0):
     """Returns a map of variables to load from a foreign checkpoint.
 
     Returns a map of variable names to load from a checkpoint to variables in

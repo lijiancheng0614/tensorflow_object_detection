@@ -589,7 +589,7 @@ class SSDMetaArch(model.DetectionModel):
                       tf.stack([combined_shape[0], combined_shape[1],
                                 4]))
 
-  def restore_map(self, from_detection_checkpoint=True):
+  def restore_map(self, from_detection_checkpoint=1):
     """Returns a map of variables to load from a foreign checkpoint.
 
     See parent class for details.
@@ -604,6 +604,8 @@ class SSDMetaArch(model.DetectionModel):
       the model graph.
     """
     variables_to_restore = {}
+    if from_detection_checkpoint == 2:
+      return {var.op.name: var for var in tf.all_variables()}
     for variable in tf.all_variables():
       if variable.op.name.startswith(self._extract_features_scope):
         var_name = variable.op.name

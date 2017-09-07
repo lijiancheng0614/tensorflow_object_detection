@@ -1505,7 +1505,7 @@ class FasterRCNNMetaArch(model.DetectionModel):
           cls_losses=tf.expand_dims(single_image_cls_loss, 0),
           decoded_boxlist_list=[proposal_boxlist])
 
-  def restore_map(self, from_detection_checkpoint=True):
+  def restore_map(self, from_detection_checkpoint=1):
     """Returns a map of variables to load from a foreign checkpoint.
 
     See parent class for details.
@@ -1519,6 +1519,8 @@ class FasterRCNNMetaArch(model.DetectionModel):
       A dict mapping variable names (to load from a checkpoint) to variables in
       the model graph.
     """
+    if from_detection_checkpoint == 2:
+      return {var.op.name: var for var in tf.all_variables()}
     if not from_detection_checkpoint:
       return self._feature_extractor.restore_from_classification_checkpoint_fn(
           self.first_stage_feature_extractor_scope,
