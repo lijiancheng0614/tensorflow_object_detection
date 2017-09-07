@@ -38,3 +38,11 @@ Modified files:
 - `meta_architectures/ssd_meta_arch.py`
 
 - `meta_architectures/faster_rcnn_meta_arch.py`
+
+### Remove some summaries when training
+
+Remove summaries about histograms and first_clone_scope when training.
+
+Modified files:
+
+- `trainer.py`
