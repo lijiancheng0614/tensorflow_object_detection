@@ -46,3 +46,15 @@ Remove summaries about histograms and first_clone_scope when training.
 Modified files:
 
 - `trainer.py`
+
+### Add `gpu_allow_growth` parameter in `eval.py`
+
+Add `gpu_allow_growth` parameter in `eval.py`, default value is `True` which means attempting to allocate only as much GPU memory based on runtime allocations.
+
+Modified files:
+
+- `eval.py`
+
+- `evaluator.py`
+
+- `eval_util.py`

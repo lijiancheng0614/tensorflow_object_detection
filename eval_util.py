@@ -295,7 +295,8 @@ def run_checkpoint_once(tensor_dict,
                         save_graph=False,
                         save_graph_dir='',
                         metric_names_to_values=None,
-                        keys_to_exclude_from_results=()):
+                        keys_to_exclude_from_results=(),
+                        gpu_allow_growth=True):
   """Evaluates both python metrics and tensorflow slim metrics.
 
   Python metrics are processed in batch by the aggregated_result_processor,
@@ -356,7 +357,9 @@ def run_checkpoint_once(tensor_dict,
   """
   if save_graph and not save_graph_dir:
     raise ValueError('`save_graph_dir` must be defined.')
-  sess = tf.Session(master, graph=tf.get_default_graph())
+  config = tf.ConfigProto()
+  config.gpu_options.allow_growth = gpu_allow_growth
+  sess = tf.Session(master, graph=tf.get_default_graph(), config=config)
   sess.run(tf.global_variables_initializer())
   sess.run(tf.local_variables_initializer())
   if restore_fn:
@@ -427,7 +430,8 @@ def repeated_checkpoint_run(tensor_dict,
                             save_graph=False,
                             save_graph_dir='',
                             metric_names_to_values=None,
-                            keys_to_exclude_from_results=()):
+                            keys_to_exclude_from_results=(),
+                            gpu_allow_growth=True):
   """Periodically evaluates desired tensors using checkpoint_dirs or restore_fn.
 
   This function repeatedly loads a checkpoint and evaluates a desired
@@ -512,7 +516,7 @@ def repeated_checkpoint_run(tensor_dict,
                           batch_processor, checkpoint_dirs,
                           variables_to_restore, restore_fn, num_batches, master,
                           save_graph, save_graph_dir, metric_names_to_values,
-                          keys_to_exclude_from_results)
+                          keys_to_exclude_from_results, gpu_allow_growth)
     number_of_evaluations += 1
 
     if (max_number_of_evaluations and

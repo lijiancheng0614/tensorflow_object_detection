@@ -61,6 +61,8 @@ tf.logging.set_verbosity(tf.logging.INFO)
 flags = tf.app.flags
 flags.DEFINE_boolean('eval_training_data', False,
                      'If training data should be evaluated for this job.')
+flags.DEFINE_boolean('gpu_allow_growth', True,
+                     'Boolean value of config.gpu_options.allow_growth.')
 flags.DEFINE_string('checkpoint_dir', '',
                     'Directory containing checkpoints to evaluate, typically '
                     'set to `train_dir` used in the training job.')
@@ -154,7 +156,7 @@ def main(unused_argv):
       label_map, max_num_classes)
 
   evaluator.evaluate(create_input_dict_fn, model_fn, eval_config, categories,
-                     FLAGS.checkpoint_dir, FLAGS.eval_dir)
+                     FLAGS.checkpoint_dir, FLAGS.eval_dir, FLAGS.gpu_allow_growth)
 
 
 if __name__ == '__main__':
