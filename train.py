@@ -73,6 +73,8 @@ flags.DEFINE_integer('ps_tasks', 0,
                      'a parameter server.')
 flags.DEFINE_string('train_dir', '',
                     'Directory to save the checkpoints and training summaries.')
+flags.DEFINE_boolean('gpu_allow_growth', True,
+                     'Boolean value of config.gpu_options.allow_growth.')
 
 flags.DEFINE_string('pipeline_config_path', '',
                     'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
@@ -191,7 +193,7 @@ def main(_):
 
   trainer.train(create_input_dict_fn, model_fn, train_config, master, task,
                 FLAGS.num_clones, worker_replicas, FLAGS.clone_on_cpu, ps_tasks,
-                worker_job_name, is_chief, FLAGS.train_dir)
+                worker_job_name, is_chief, FLAGS.train_dir, FLAGS.gpu_allow_growth)
 
 
 if __name__ == '__main__':
