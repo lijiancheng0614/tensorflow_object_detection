@@ -68,3 +68,13 @@ Modified files:
 - `train.py`
 
 - `trainer.py`
+
+### Add `max_to_keep` parameter in `train_config`
+
+Add `max_to_keep` parameter in `train_config`, default value is `5` which means the 5 most recent checkpoint files are kept. If `0`, all checkpoint files are kept.
+
+Modified files:
+
+- `trainer.py`
+
+- `protos/train.proto`

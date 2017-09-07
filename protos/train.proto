@@ -61,4 +61,7 @@ message TrainConfig {
 
   // Maximum capacity of the queue used to prefetch assembled batches.
   optional int32 prefetch_queue_capacity = 16 [default=10];
+
+  // The maximum number of recent checkpoint files to keep.
+  optional uint32 max_to_keep = 17 [default=5];
 }
