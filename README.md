@@ -78,3 +78,17 @@ Modified files:
 - `trainer.py`
 
 - `protos/train.proto`
+
+### Add `FocalSigmoidClassificationLoss` in `model`
+
+In config, `model` -> `loss` -> `classification_loss` can be `focal_sigmoid`, parameters: anchorwise_output, gamma.
+
+Reference: https://arxiv.org/pdf/1708.02002.pdf
+
+Modified files:
+
+- `core/losses.py`
+
+- `builders/losses_builder.py`
+
+- `protos/losses.proto`

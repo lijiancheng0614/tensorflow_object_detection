@@ -21,6 +21,7 @@ Localization losses:
  * WeightedIOULocalizationLoss
 
 Classification losses:
+ * FocalSigmoidClassificationLoss
  * WeightedSigmoidClassificationLoss
  * WeightedSoftmaxClassificationLoss
  * BootstrappedSigmoidClassificationLoss
@@ -191,6 +192,59 @@ class WeightedIOULocalizationLoss(Loss):
     per_anchor_iou_loss = 1.0 - box_list_ops.matched_iou(predicted_boxes,
                                                          target_boxes)
     return tf.reduce_sum(tf.reshape(weights, [-1]) * per_anchor_iou_loss)
+
+
+class FocalSigmoidClassificationLoss(Loss):
+  """Focal loss function."""
+
+  def __init__(self, anchorwise_output=False, gamma=2, epsilon=1e-12,):
+    """Constructor.
+
+    Args:
+      anchorwise_output: Outputs loss per anchor. (default False)
+      gamma:
+      p_t = 1 - x          if l == 0
+      p_t = x              if l == 1
+      focal_loss = -(1 - p_t) ** gamma * log(p_t)
+      epsilon: A small increment to add to avoid taking a log of zero.
+
+    """
+    self._anchorwise_output = anchorwise_output
+    self._gamma = gamma
+    self._epsilon = epsilon
+
+  def _compute_loss(self,
+                    prediction_tensor,
+                    target_tensor,
+                    weights,
+                    class_indices=None):
+    """Compute loss function.
+
+    Args:
+      prediction_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing the predicted logits for each class
+      target_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing one-hot encoded classification targets
+      weights: a float tensor of shape [batch_size, num_anchors]
+      class_indices: (Optional) A 1-D integer tensor of class indices.
+        If provided, computes loss only for the specified class indices.
+
+    Returns:
+      loss: a (scalar) tensor representing the value of the loss function
+            or a float tensor of shape [batch_size, num_anchors]
+    """
+    weights = tf.expand_dims(weights, 2)
+    if class_indices is not None:
+      weights *= tf.reshape(
+          ops.indices_to_dense_vector(class_indices,
+                                      tf.shape(prediction_tensor)[2]),
+          [1, 1, -1])
+    preds = tf.nn.sigmoid(prediction_tensor)
+    preds = tf.where(tf.equal(target_tensor, 1), preds, 1. - preds)
+    losses = -(1. - preds) ** self._gamma * tf.log(preds + self._epsilon)
+    if self._anchorwise_output:
+      return tf.reduce_sum(losses * weights, 2)
+    return tf.reduce_sum(losses * weights)
 
 
 class WeightedSigmoidClassificationLoss(Loss):

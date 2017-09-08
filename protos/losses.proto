@@ -53,6 +53,7 @@ message ClassificationLoss {
     WeightedSigmoidClassificationLoss weighted_sigmoid = 1;
     WeightedSoftmaxClassificationLoss weighted_softmax = 2;
     BootstrappedSigmoidClassificationLoss bootstrapped_sigmoid = 3;
+    FocalSigmoidClassificationLoss focal_sigmoid = 4;
   }
 }
 
@@ -81,6 +82,15 @@ message BootstrappedSigmoidClassificationLoss {
 
   // Output loss per anchor.
   optional bool anchorwise_output = 3 [default=false];
+}
+
+// Classification focal loss using a sigmoid function over class predictions.
+message FocalSigmoidClassificationLoss {
+  // Output loss per anchor.
+  optional bool anchorwise_output = 1 [default=false];
+
+  // gamma
+  optional float gamma = 2 [default=2];
 }
 
 // Configuation for hard example miner.

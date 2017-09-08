@@ -141,6 +141,12 @@ def _build_classification_loss(loss_config):
 
   loss_type = loss_config.WhichOneof('classification_loss')
 
+  if loss_type == 'focal_sigmoid':
+    config = loss_config.focal_sigmoid
+    return losses.FocalSigmoidClassificationLoss(
+        anchorwise_output=config.anchorwise_output,
+        gamma=config.gamma)
+
   if loss_type == 'weighted_sigmoid':
     config = loss_config.weighted_sigmoid
     return losses.WeightedSigmoidClassificationLoss(
